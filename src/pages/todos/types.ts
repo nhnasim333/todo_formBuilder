@@ -15,6 +15,7 @@ export type TodoStatusFilter = "all" | "completed" | "pending";
 export type TodoUiState = {
   selectedUserId: number | "all";
   status: TodoStatusFilter;
+  searchTerm: string;
   page: number;
   pageSize: number;
 };

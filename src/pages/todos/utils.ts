@@ -8,6 +8,7 @@ export const matchesTodoFilters = (
   todo: TodoItem,
   selectedUserId: TodoUiState["selectedUserId"],
   status: TodoStatusFilter,
+  searchTerm: string,
 ): boolean => {
   const userMatches = selectedUserId === "all" || todo.userId === selectedUserId;
 
@@ -16,7 +17,12 @@ export const matchesTodoFilters = (
     (status === "completed" && todo.completed) ||
     (status === "pending" && !todo.completed);
 
-  return userMatches && statusMatches;
+  const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+  const searchMatches =
+    normalizedSearchTerm.length === 0 ||
+    todo.title.toLowerCase().includes(normalizedSearchTerm);
+
+  return userMatches && statusMatches && searchMatches;
 };
 
 export const paginateTodos = (

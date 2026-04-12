@@ -49,9 +49,14 @@ const TodosPage = () => {
 
   const filteredTodos = useMemo(() => {
     return todos.filter((todo: TodoItem) =>
-      matchesTodoFilters(todo, uiState.selectedUserId, uiState.status),
+      matchesTodoFilters(
+        todo,
+        uiState.selectedUserId,
+        uiState.status,
+        uiState.searchTerm,
+      ),
     );
-  }, [todos, uiState.selectedUserId, uiState.status]);
+  }, [todos, uiState.selectedUserId, uiState.status, uiState.searchTerm]);
 
   const totalPages = Math.max(
     1,
@@ -87,6 +92,14 @@ const TodosPage = () => {
     }));
   };
 
+  const handleSearchChange = (value: string) => {
+    setUiState((previous) => ({
+      ...previous,
+      searchTerm: value,
+      page: 1,
+    }));
+  };
+
   const resetFilters = () => {
     setUiState((previous) => ({
       ...previous,
@@ -108,6 +121,17 @@ const TodosPage = () => {
         </header>
 
         <div className={styles.controls}>
+          <label className={styles.control}>
+            <span>Search</span>
+            <input
+              className={styles.input}
+              type="text"
+              placeholder="Search by title"
+              value={uiState.searchTerm}
+              onChange={(event) => handleSearchChange(event.target.value)}
+            />
+          </label>
+
           <label className={styles.control}>
             <span>User</span>
             <select

@@ -30,7 +30,7 @@
 
 .controls {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
   margin-bottom: 16px;
 }
@@ -43,6 +43,7 @@
   font-weight: 500;
 }
 
+.input,
 .control select {
   padding: 10px;
   border: 1px solid #cbd5e1;

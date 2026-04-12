@@ -19,6 +19,8 @@ const isValidTodoUiState = (value: unknown): value is TodoUiState => {
     candidate.status === "completed" ||
     candidate.status === "pending";
 
+  const validSearchTerm = typeof candidate.searchTerm === "string";
+
   const validPage =
     typeof candidate.page === "number" &&
     Number.isInteger(candidate.page) &&
@@ -29,7 +31,9 @@ const isValidTodoUiState = (value: unknown): value is TodoUiState => {
     Number.isInteger(candidate.pageSize) &&
     candidate.pageSize > 0;
 
-  return validUserId && validStatus && validPage && validPageSize;
+  return (
+    validUserId && validStatus && validSearchTerm && validPage && validPageSize
+  );
 };
 
 export const loadTodoUiState = (): TodoUiState => {
