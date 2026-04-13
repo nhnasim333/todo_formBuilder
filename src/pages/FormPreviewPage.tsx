@@ -27,10 +27,12 @@ const FormPreviewPage = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const payload = fields.reduce<Record<string, string>>((acc, field) => {
-      acc[field.label] = values[field.id] ?? "";
-      return acc;
-    }, {});
+    const payload = fields.map((field) => ({
+      id: field.id,
+      label: field.label,
+      type: field.type,
+      value: values[field.id] ?? "",
+    }));
 
     console.log("Form Preview Submitted:", payload);
   };

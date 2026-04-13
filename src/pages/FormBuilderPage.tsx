@@ -14,7 +14,41 @@ const FormBuilderPage = () => {
   const [type, setType] = useState<FormFieldType>("text");
   const [rawOptions, setRawOptions] = useState<string>("");
 
-  const canAddField = useMemo(() => label.trim().length > 0, [label]);
+  const parsedOptions = useMemo(
+    () =>
+      rawOptions
+        .split(",")
+        .map((option) => option.trim())
+        .filter((option) => option.length > 0),
+    [rawOptions],
+  );
+
+  const normalizedLabel = useMemo(() => label.trim().toLowerCase(), [label]);
+
+  const isDuplicateLabel = useMemo(
+    () =>
+      normalizedLabel.length > 0 &&
+      fields.some(
+        (field) => field.label.trim().toLowerCase() === normalizedLabel,
+      ),
+    [fields, normalizedLabel],
+  );
+
+  const canAddField = useMemo(() => {
+    if (label.trim().length === 0) {
+      return false;
+    }
+
+    if (isDuplicateLabel) {
+      return false;
+    }
+
+    if (type === "select" && parsedOptions.length === 0) {
+      return false;
+    }
+
+    return true;
+  }, [isDuplicateLabel, label, parsedOptions.length, type]);
 
   const persistAndSetFields = (nextFields: FormFieldConfig[]) => {
     setFields(nextFields);
@@ -22,11 +56,6 @@ const FormBuilderPage = () => {
   };
 
   const handleAddField = () => {
-    const parsedOptions = rawOptions
-      .split(",")
-      .map((option) => option.trim())
-      .filter((option) => option.length > 0);
-
     const newField: FormFieldConfig = {
       id: createFieldId(),
       label: label.trim(),
@@ -96,6 +125,20 @@ const FormBuilderPage = () => {
           >
             Add Field
           </button>
+
+          {isDuplicateLabel && (
+            <p className={styles.empty}>
+              A field with this label already exists.
+            </p>
+          )}
+
+          {type === "select" &&
+            parsedOptions.length === 0 &&
+            label.trim().length > 0 && (
+              <p className={styles.empty}>
+                Please provide at least one option for a select field.
+              </p>
+            )}
         </div>
 
         {fields.length === 0 ? (
